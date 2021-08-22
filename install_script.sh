@@ -26,6 +26,9 @@ read kdenlive
 echo "¿Instalar dropbox(flatpak)? Si/No"
 read dropbox
 
+echo "¿Configurar qtile? Si/No"
+read qtile_config
+
 if [ "${iwlwifi,,}" = "si" ]
 then
     PACKAGES_TO_INSTALL="${PACKAGES_TO_INSTALL} iwlwifi"
@@ -95,6 +98,15 @@ fi
 if [ "${dropbox,,}" = "si" ]
 then
     flatpak install flathub com.dropbox.Client -y
+fi
+
+if [ "${qtile_config,,}" = "si" ]
+then
+   runuser -l $user -c 'git clone https://github.com/iscluis06/qtile_config.git /tmp/'
+   runuser -l $user -c 'mkdir ~/Images'
+   runuser -l $user -c 'mkdir -p ~/.config/qtile'
+   runuser -l $user -c 'cp /tmp/qtile_config/config.py ~/.config/qtile'
+   runuser -l $user -c 'cp /tmp/qtile_config/wolf01.jpg ~/Images/'
 fi
 
 echo "Proceso de instalación finalizado"
