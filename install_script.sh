@@ -84,7 +84,7 @@ grep -q 'case \$(tty) in /dev/tty1)' /home/$user/.bashrc
 if [ $? -ne 0 ]
     then
         runuser -l $user -c 'echo "case \$(tty) in /dev/tty1)" >> .bashrc'
-	runuser -l $user -c 'echo "if [ \$(pgrep Xorg) -eq 0 ]" >> .bashrc'
+	runuser -l $user -c 'echo "if [ \$(pgrep Xorg -c) -eq 0 ]" >> .bashrc'
 	runuser -l $user -c 'echo "then" >> .bashrc'
 	runuser -l $user -c 'echo "    		startx" >> .bashrc'
 	runuser -l $user -c 'echo "	fi" >> .bashrc'
