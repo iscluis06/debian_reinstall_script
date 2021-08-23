@@ -31,7 +31,7 @@ read qtile_config
 
 if [ "${iwlwifi,,}" = "si" ]
 then
-    PACKAGES_TO_INSTALL="${PACKAGES_TO_INSTALL} iwlwifi"
+    PACKAGES_TO_INSTALL="${PACKAGES_TO_INSTALL} firmware-iwlwifi"
 fi
 
 if [ "${nvidia,,}" = "si" ]
@@ -59,7 +59,7 @@ fi
 
 grep -q '/usr/local/bin/qtile start' .xinitrc
 
-if [ $0 -ne 0 ]
+if [ $? -ne 0 ]
     then
         runuser -l $user -c 'echo "/usr/local/bin/qtile start" >> .xinitrc'
 fi
@@ -68,45 +68,61 @@ if [ "${ohmybash,,}" = "si" ]
 then
     if [ ! -d "/home/${user}/.oh-my-bash" ]
     	then
-    		runuser -l $user -c 'sh -c "$(wget https://raw.github.com/ohmybash/oh-my-bash/master/tools/install.sh -O -)"'
-    		exit
+    		runuser -l $user -c 'wget https://raw.github.com/ohmybash/oh-my-bash/master/tools/install.sh -O ohmybash.sh'
+		runuser -l $user -c "sed -i 's/exec bash; source \$HOME\/.bashrc/exit/' ohmybash.sh"
+		chmod +x /home/$user/ohmybash.sh
+    		runuser -l $user -c './ohmybash.sh'
     		runuser -l $user -c 'sed -i "s/OSH_THEME=\"font\"/OSH_THEME=\"powerline\"/" .bashrc'
+		echo "termina proceso instalacion oh-my-bash"
     	fi
+	echo "saliendo de oh-my-bash if"
 fi
 
-grep -q 'case $(tty) in /dev/tty1)'
+echo "comenzando prueba de terminal virtual tty1"
+grep -q 'case \$(tty) in /dev/tty1)' /home/$user/.bashrc
 
-if [ $0 -ne 0 ]
+if [ $? -ne 0 ]
     then
-        runuser -l $user -c 'echo "case $(tty) in /dev/tty1)" >> .bashrc'
-	runuser -l $user -c 'echo "    startx ;;" >> .bashrc'
+        runuser -l $user -c 'echo "case \$(tty) in /dev/tty1)" >> .bashrc'
+	runuser -l $user -c 'echo "if [ \$(pgrep Xorg) -eq 0 ]" >> .bashrc'
+	runuser -l $user -c 'echo "then" >> .bashrc'
+	runuser -l $user -c 'echo "    		startx" >> .bashrc'
+	runuser -l $user -c 'echo "	fi" >> .bashrc'
 	runuser -l $user -c 'echo "esac" >> .bashrc'
+	echo "Configurada sesion de qtile en xorg"
 fi
 
+echo "configurando flathub en flatpak"
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 if [ "${discord,,}" = "si" ]
 then
+    echo "Instalando discord..."
     flatpak install flathub com.discordapp.Discord -y
 fi
 
 if [ "${kdenlive,,}" = "si" ]
 then
+    echo "Instalando kdenlive"
     flatpak install flathub org.kde.kdenlive -y
 fi
 
 if [ "${dropbox,,}" = "si" ]
 then
+    echo "Instalando dropbox..."
     flatpak install flathub com.dropbox.Client -y
 fi
 
 if [ "${qtile_config,,}" = "si" ]
 then
-   runuser -l $user -c 'git clone https://github.com/iscluis06/qtile_config.git /tmp/'
+   echo "Configurando qtile..."
+   runuser -l $user -c 'mkdir tmp && cd tmp'
+   runuser -l $user -c 'git clone https://github.com/iscluis06/qtile_config.git tmp/qtile_config'
    runuser -l $user -c 'mkdir ~/Images'
    runuser -l $user -c 'mkdir -p ~/.config/qtile'
-   runuser -l $user -c 'cp /tmp/qtile_config/config.py ~/.config/qtile'
-   runuser -l $user -c 'cp /tmp/qtile_config/wolf01.jpg ~/Images/'
+   runuser -l $user -c '\cp -r tmp/qtile_config/config.py ~/.config/qtile'
+   runuser -l $user -c '\cp -r tmp/qtile_config/wolf01.jpg ~/Images/'
+   runuser -l $user -c 'cd ~ && rm -R -f tmp'
 fi
 
 echo "Proceso de instalación finalizado"
