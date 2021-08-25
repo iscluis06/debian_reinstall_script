@@ -1,6 +1,6 @@
 #!/bin/bash
 #Instalación basada en qtile y xorg
-PACKAGES_TO_INSTALL=" xorg xserver-xorg libcairo2 python3-pip libgdk-pixbuf2.0-0 libpangocairo-1.0-0 vim htop screenfetch fonts-ubuntu fonts-powerline git openjdk-11-jdk flatpak nodejs npm chromium firefox-esr ffmpeg obs-studio kitty vlc gimp gmtp pulseaudio pavucontrol unrar zip fonts-font-awesome fonts-noto-mono"
+PACKAGES_TO_INSTALL=" xorg xserver-xorg libcairo2 python3-pip libgdk-pixbuf2.0-0 libpangocairo-1.0-0 vim htop screenfetch fonts-ubuntu fonts-powerline git openjdk-11-jdk flatpak nodejs npm chromium firefox-esr ffmpeg obs-studio tilix vlc gimp gmtp pulseaudio pavucontrol unrar zip fonts-font-awesome fonts-noto-mono desktop-base"
 
 echo "¿Instalar iwlwifi (Controladores para tarjetas wifi intel/tp-link)? Si/No"
 read iwlwifi
@@ -52,16 +52,16 @@ apt install $PACKAGES_TO_INSTALL -y
 pip3 install xcffib && pip3 install cairocffi && pip3 install qtile
 
 runuser -l $user -c "cd ~"
-if [ ! -f "/home/${user}/.xinitrc" ]
+if [ ! -f "/home/${user}/.xsession" ]
     then
-        runuser -l $user -c 'touch .xinitrc'
+        runuser -l $user -c 'touch .xsession'
 fi
 
-grep -q '/usr/local/bin/qtile start' .xinitrc
+grep -q 'exec /usr/local/bin/qtile start' .xsession
 
 if [ $? -ne 0 ]
     then
-        runuser -l $user -c 'echo "/usr/local/bin/qtile start" >> .xinitrc'
+        runuser -l $user -c 'echo "exec /usr/local/bin/qtile start" >> .xsession'
 fi
 
 if [ "${ohmybash,,}" = "si" ]
@@ -76,20 +76,6 @@ then
 		echo "termina proceso instalacion oh-my-bash"
     	fi
 	echo "saliendo de oh-my-bash if"
-fi
-
-echo "comenzando prueba de terminal virtual tty1"
-grep -q 'case \$(tty) in /dev/tty1)' /home/$user/.bashrc
-
-if [ $? -ne 0 ]
-    then
-        runuser -l $user -c 'echo "case \$(tty) in /dev/tty1)" >> .bashrc'
-	runuser -l $user -c 'echo "if [ \$(pgrep Xorg -c) -eq 0 ]" >> .bashrc'
-	runuser -l $user -c 'echo "then" >> .bashrc'
-	runuser -l $user -c 'echo "    		startx" >> .bashrc'
-	runuser -l $user -c 'echo "	fi" >> .bashrc'
-	runuser -l $user -c 'echo "esac" >> .bashrc'
-	echo "Configurada sesion de qtile en xorg"
 fi
 
 echo "configurando flathub en flatpak"
@@ -123,6 +109,20 @@ then
    runuser -l $user -c '\cp -r tmp/qtile_config/config.py ~/.config/qtile'
    runuser -l $user -c '\cp -r tmp/qtile_config/wolf01.jpg ~/Images/'
    runuser -l $user -c 'cd ~ && rm -R -f tmp'
+fi
+
+echo "comenzando prueba de terminal virtual tty1"
+grep -q 'case \$(tty) in /dev/tty1)' /home/$user/.bashrc
+
+if [ $? -ne 0 ]
+    then
+        runuser -l $user -c 'echo "case \$(tty) in /dev/tty1)" >> .bashrc'
+	runuser -l $user -c 'echo "if [ \$(pgrep Xorg -c) -eq 0 ]" >> .bashrc'
+	runuser -l $user -c 'echo "then" >> .bashrc'
+	runuser -l $user -c 'echo "    		startx" >> .bashrc'
+	runuser -l $user -c 'echo "	fi" >> .bashrc'
+	runuser -l $user -c 'echo "esac" >> .bashrc'
+	echo "Configurada sesion de qtile en xorg"
 fi
 
 echo "Proceso de instalación finalizado"
