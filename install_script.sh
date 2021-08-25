@@ -116,12 +116,7 @@ grep -q 'case \$(tty) in /dev/tty1)' /home/$user/.bashrc
 
 if [ $? -ne 0 ]
     then
-        runuser -l $user -c 'echo "case \$(tty) in /dev/tty1)" >> .bashrc'
-	runuser -l $user -c 'echo "if [ \$(pgrep Xorg -c) -eq 0 ]" >> .bashrc'
-	runuser -l $user -c 'echo "then" >> .bashrc'
-	runuser -l $user -c 'echo "    		startx" >> .bashrc'
-	runuser -l $user -c 'echo "	fi" >> .bashrc'
-	runuser -l $user -c 'echo "esac" >> .bashrc'
+        runuser -l $user -c 'echo -e "case \$(tty) in /dev/tty1)\n\tif [ \$(pgrep Xorg -c) -eq 0 ]\n\tthen\n\t\tstartx\n\tfi\nesac" >> .bashrc'
 	echo "Configurada sesion de qtile en xorg"
 fi
 
