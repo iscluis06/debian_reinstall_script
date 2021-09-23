@@ -1,6 +1,6 @@
 #!/bin/bash
 #Instalación basada en qtile y xorg
-PACKAGES_TO_INSTALL=" xorg xserver-xorg libcairo2 python3-pip libgdk-pixbuf2.0-0 libpangocairo-1.0-0 vim htop screenfetch fonts-ubuntu fonts-powerline git openjdk-11-jdk flatpak nodejs npm chromium firefox-esr ffmpeg obs-studio tilix vlc gimp gmtp pulseaudio pavucontrol unrar zip fonts-font-awesome fonts-noto-mono desktop-base"
+PACKAGES_TO_INSTALL=" xorg xserver-xorg libcairo2 python3-pip libgdk-pixbuf2.0-0 libpangocairo-1.0-0 vim htop screenfetch fonts-ubuntu fonts-powerline git openjdk-11-jdk flatpak nodejs npm chromium firefox-esr ffmpeg obs-studio tilix vlc gimp gmtp pulseaudio pavucontrol unrar zip fonts-font-awesome fonts-noto-mono desktop-base printer-driver-all bluetooth pulse-audio-module-bluetooth flameshot"
 
 echo "¿Instalar iwlwifi (Controladores para tarjetas wifi intel/tp-link)? Si/No"
 read iwlwifi
@@ -50,6 +50,8 @@ sed -i 's/deb-src http:\/\/deb.debian.org\/debian\/ bullseye main/deb-src http:\
 apt update
 apt install $PACKAGES_TO_INSTALL -y
 pip3 install xcffib && pip3 install cairocffi && pip3 install qtile
+pip3 install psutil
+pip3 install dbus-next
 
 runuser -l $user -c "cd ~"
 if [ ! -f "/home/${user}/.xsession" ]
