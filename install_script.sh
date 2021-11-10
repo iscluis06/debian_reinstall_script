@@ -1,6 +1,6 @@
 #!/bin/bash
 #Instalación basada en qtile y xorg
-PACKAGES_TO_INSTALL=" xorg xserver-xorg libcairo2 python3-pip libgdk-pixbuf2.0-0 libpangocairo-1.0-0 vim htop screenfetch fonts-ubuntu fonts-powerline git openjdk-11-jdk flatpak nodejs npm chromium firefox-esr ffmpeg obs-studio tilix vlc gimp gmtp pulseaudio pavucontrol unrar zip fonts-font-awesome fonts-noto-mono desktop-base printer-driver-all bluetooth pulseaudio-module-bluetooth flameshot vim-gtk"
+PACKAGES_TO_INSTALL=" xorg xserver-xorg libcairo2 python3-pip libgdk-pixbuf2.0-0 libpangocairo-1.0-0 vim htop screenfetch fonts-ubuntu fonts-powerline git openjdk-11-jdk flatpak nodejs npm chromium firefox-esr ffmpeg obs-studio tilix vlc gimp gmtp pulseaudio pavucontrol unrar zip fonts-font-awesome fonts-noto-mono desktop-base printer-driver-all flameshot vim-gtk compton rofi"
 
 echo "¿Instalar iwlwifi (Controladores para tarjetas wifi intel/tp-link)? Si/No"
 read iwlwifi
@@ -29,6 +29,9 @@ read dropbox
 echo "¿Configurar qtile? Si/No"
 read qtile_config
 
+echo "¿Instalar bluetooth? Si/No"
+read bluetooth
+
 if [ "${iwlwifi,,}" = "si" ]
 then
     PACKAGES_TO_INSTALL="${PACKAGES_TO_INSTALL} firmware-iwlwifi"
@@ -42,6 +45,11 @@ fi
 if [ "${qemu,,}" = "si" ]
 then
     PACKAGES_TO_INSTALL="${PACKAGES_TO_INSTALL} qemu qemu-system libvirt-clients libvirt-daemon-system"
+fi
+
+if [ "${bluetooth,,}" = "si" ]
+then
+    PACKAGES_TO_INSTALL="${PACKAGES_TO_INSTALL} bluetooth pulseaudio-module-bluetooth"
 fi
 
 sed -i 's/deb http:\/\/deb.debian.org\/debian\/ bullseye main/deb http:\/\/deb.debian.org\/debian\/ bullseye main non-free contrib/' /etc/apt/sources.list
@@ -112,6 +120,11 @@ then
    runuser -l $user -c '\cp -r tmp/qtile_config/wolf01.jpg ~/Images/'
    runuser -l $user -c 'cd ~ && rm -R -f tmp'
 fi
+
+echo "Configurando vim"
+runuser -l $user -c 'wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+runuser -l $user -c 'mkdir -p ~/.vim/autoload'
+runuser -l $user -c 'mv plug.vim ~/.vim/autoload/'
 
 echo "comenzando prueba de terminal virtual tty1"
 grep -q 'case \$(tty) in /dev/tty1)' /home/$user/.bashrc
