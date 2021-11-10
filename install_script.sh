@@ -47,7 +47,7 @@ fi
 
 if [ "${qemu,,}" = "si" ]
 then
-    PACKAGES_TO_INSTALL="${PACKAGES_TO_INSTALL} qemu qemu-system libvirt-clients libvirt-daemon-system"
+    PACKAGES_TO_INSTALL="${PACKAGES_TO_INSTALL} qemu qemu-system libvirt-clients libvirt-daemon-system virt-viewer"
 fi
 
 if [ "${bluetooth,,}" = "si" ]
