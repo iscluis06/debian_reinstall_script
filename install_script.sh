@@ -141,7 +141,7 @@ runuser -l $user -c 'chmod +x ~/bin/startup.sh'
 echo "Configurando rofi"
 runuser -l $user -c 'mkdir -p ~/.config/rofi'
 mv config.rasi /home/$user/.config/rofi
-chown $user /home/$user/config.rasi
+chown $user /home/$user/.config/rofi/config.rasi
 
 if [ "${multimonitor,,}" = "si" ]
 then
