@@ -68,29 +68,29 @@ pip3 install dbus-next
 
 runuser -l $user -c "cd ~"
 if [ ! -f "/home/${user}/.xsession" ]
-    then
-        runuser -l $user -c 'touch .xsession'
+then
+    runuser -l $user -c 'touch .xsession'
 fi
 
 grep -q 'exec /usr/local/bin/qtile start' .xsession
 
 if [ $? -ne 0 ]
-    then
-        runuser -l $user -c 'echo "exec /usr/local/bin/qtile start" >> .xsession'
+then
+    runuser -l $user -c 'echo "exec /usr/local/bin/qtile start" >> .xsession'
 fi
 
 if [ "${ohmybash,,}" = "si" ]
 then
     if [ ! -d "/home/${user}/.oh-my-bash" ]
-    	then
-    		runuser -l $user -c 'wget https://raw.github.com/ohmybash/oh-my-bash/master/tools/install.sh -O ohmybash.sh'
-		runuser -l $user -c "sed -i 's/exec bash; source \$HOME\/.bashrc/exit/' ohmybash.sh"
-		chmod +x /home/$user/ohmybash.sh
-    		runuser -l $user -c './ohmybash.sh'
-    		runuser -l $user -c 'sed -i "s/OSH_THEME=\"font\"/OSH_THEME=\"powerline\"/" .bashrc'
-		echo "termina proceso instalacion oh-my-bash"
-    	fi
-	echo "saliendo de oh-my-bash if"
+    then
+        runuser -l $user -c 'wget https://raw.github.com/ohmybash/oh-my-bash/master/tools/install.sh -O ohmybash.sh'
+        runuser -l $user -c "sed -i 's/exec bash; source \$HOME\/.bashrc/exit/' ohmybash.sh"
+        chmod +x /home/$user/ohmybash.sh
+        runuser -l $user -c './ohmybash.sh'
+        runuser -l $user -c 'sed -i "s/OSH_THEME=\"font\"/OSH_THEME=\"powerline\"/" .bashrc'
+        echo "termina proceso instalacion oh-my-bash"
+    fi
+    echo "saliendo de oh-my-bash if"
 fi
 
 echo "configurando flathub en flatpak"
@@ -116,14 +116,14 @@ fi
 
 if [ "${qtile_config,,}" = "si" ]
 then
-   echo "Configurando qtile..."
-   runuser -l $user -c 'mkdir tmp && cd tmp'
-   runuser -l $user -c 'git clone https://github.com/iscluis06/qtile_config.git /tmp/qtile_config'
-   runuser -l $user -c 'mkdir ~/Images'
-   runuser -l $user -c 'mkdir -p ~/.config/qtile'
-   runuser -l $user -c '\cp -r tmp/qtile_config/config.py ~/.config/qtile'
-   runuser -l $user -c '\cp -r tmp/qtile_config/wolf01.jpg ~/Images/'
-   runuser -l $user -c 'cd ~ && rm -R -f tmp'
+    echo "Configurando qtile..."
+    runuser -l $user -c 'mkdir tmp && cd tmp'
+    runuser -l $user -c 'git clone https://github.com/iscluis06/qtile_config.git /tmp/qtile_config'
+    runuser -l $user -c 'mkdir ~/Images'
+    runuser -l $user -c 'mkdir -p ~/.config/qtile'
+    runuser -l $user -c '\cp -r tmp/qtile_config/config.py ~/.config/qtile'
+    runuser -l $user -c '\cp -r tmp/qtile_config/wolf01.jpg ~/Images/'
+    runuser -l $user -c 'cd ~ && rm -R -f tmp'
 fi
 
 echo "Configurando vim"
@@ -148,17 +148,16 @@ then
     chown $user $SCRIPT_DIR/screen-config.sh
     mv screen-config.sh /home/$user/bin/
     runuser -l $user -c 'chmod +x ~/bin/screen-config.sh'
-    runuser -l $user -c 'sed -i "s/#os.system(home+\"/bin/screen-config.sh\")/os.system(home+\"/bin/screen-config.sh\")/" ~/.config/qtile/config.py'
-    
-if
+    runuser -l $user -c 'sed -i "s/#os.system(home+\"/bin/screen-config.sh\")/os.system(home+\"/bin/screen-config.sh\")/" ~/.config/qtile/config.py'  
+fi
 
 echo "comenzando prueba de terminal virtual tty1"
 grep -q 'case \$(tty) in /dev/tty1)' /home/$user/.bashrc
 
 if [ $? -ne 0 ]
-    then
-        runuser -l $user -c 'echo -e "case \$(tty) in /dev/tty1)\n\tif [ \$(pgrep Xorg -c) -eq 0 ]\n\tthen\n\t\tstartx\n\tfi\nesac" >> .bashrc'
-	echo "Configurada sesion de qtile en xorg"
+then
+    runuser -l $user -c 'echo -e "case \$(tty) in /dev/tty1)\n\tif [ \$(pgrep Xorg -c) -eq 0 ]\n\tthen\n\t\tstartx\n\tfi\nesac" >> .bashrc'
+    echo "Configurada sesion de qtile en xorg"
 fi
 
 echo "Proceso de instalación finalizado"
