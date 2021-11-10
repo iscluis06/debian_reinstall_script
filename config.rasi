@@ -1,0 +1,8 @@
+/** Basic config file **/
+
+configuration {
+  show-icons:         true;
+  icon-theme:         "Papirus";
+  plugin-path:	      "/home/iscluis/launchers/misc";
+}
+@import "/usr/share/rofi/themes/Monokai.rasi"
