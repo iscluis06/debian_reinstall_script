@@ -1,6 +1,6 @@
 #!/bin/bash
 #Instalación basada en qtile y xorg
-PACKAGES_TO_INSTALL=" xorg xserver-xorg libcairo2 python3-pip libgdk-pixbuf2.0-0 libpangocairo-1.0-0 vim htop screenfetch fonts-ubuntu fonts-powerline git openjdk-11-jdk flatpak nodejs npm chromium firefox-esr ffmpeg obs-studio tilix vlc gimp gmtp pulseaudio pavucontrol unrar zip fonts-font-awesome fonts-noto-mono desktop-base printer-driver-all flameshot vim-gtk compton rofi"
+PACKAGES_TO_INSTALL=" xorg xserver-xorg libcairo2 python3-pip libgdk-pixbuf2.0-0 libpangocairo-1.0-0 vim htop screenfetch fonts-ubuntu fonts-powerline git openjdk-11-jdk flatpak nodejs npm chromium firefox-esr ffmpeg obs-studio tilix vlc gimp gmtp pulseaudio pavucontrol unrar zip fonts-font-awesome fonts-noto-mono desktop-base printer-driver-all flameshot vim-gtk compton rofi xfce4-notifyd"
 
 echo "¿Instalar iwlwifi (Controladores para tarjetas wifi intel/tp-link)? Si/No"
 read iwlwifi
@@ -31,6 +31,9 @@ read qtile_config
 
 echo "¿Instalar bluetooth? Si/No"
 read bluetooth
+
+echo "¿Multimonitor? Si/No"
+read multimonitor
 
 if [ "${iwlwifi,,}" = "si" ]
 then
@@ -125,6 +128,24 @@ echo "Configurando vim"
 runuser -l $user -c 'wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 runuser -l $user -c 'mkdir -p ~/.vim/autoload'
 runuser -l $user -c 'mv plug.vim ~/.vim/autoload/'
+
+
+echo "Iniciando configuración de arranque"
+runuser -l $user -c 'mkdir -p ~/bin'
+runuser -l $user -c 'cp startup.sh ~/bin'
+runuser -l $user -c 'chmod +x ~/bin/startup.sh'
+
+echo "Configurando rofi"
+runuser -l $user -c 'mkdir -p ~/.config/rofi'
+runuser -l $user -c 'cp ./config.rasi ~/.config/rofi'
+
+if [ "${multimonitor,,}" = "si" ]
+then
+    runuser -l $user -c "cp screen-config.sh ~/bin"
+    runuser -l $user -c 'chmod +x ~/bin/screen-config.sh'
+    runuser -l $user -c 'sed -i "s/#os.system(home+\"/bin/screen-config.sh\")/os.system(home+\"/bin/screen-config.sh\")/" ~/.config/qtile/config.py'
+    
+if
 
 echo "comenzando prueba de terminal virtual tty1"
 grep -q 'case \$(tty) in /dev/tty1)' /home/$user/.bashrc
