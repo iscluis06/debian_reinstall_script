@@ -32,6 +32,8 @@ read qtile_config
 echo "¿Instalar bluetooth? Si/No"
 read bluetooth
 
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 echo "¿Multimonitor? Si/No"
 read multimonitor
 
@@ -132,16 +134,16 @@ runuser -l $user -c 'mv plug.vim ~/.vim/autoload/'
 
 echo "Iniciando configuración de arranque"
 runuser -l $user -c 'mkdir -p ~/bin'
-runuser -l $user -c 'cp startup.sh ~/bin'
+runuser -l $user -c 'cp ${SCRIPT_DIR}/startup.sh ~/bin'
 runuser -l $user -c 'chmod +x ~/bin/startup.sh'
 
 echo "Configurando rofi"
 runuser -l $user -c 'mkdir -p ~/.config/rofi'
-runuser -l $user -c 'cp ./config.rasi ~/.config/rofi'
+runuser -l $user -c 'cp ${SCRIPT_DIR}/config.rasi ~/.config/rofi'
 
 if [ "${multimonitor,,}" = "si" ]
 then
-    runuser -l $user -c "cp screen-config.sh ~/bin"
+    runuser -l $user -c "cp ${SCRIPT_DIR}/screen-config.sh ~/bin"
     runuser -l $user -c 'chmod +x ~/bin/screen-config.sh'
     runuser -l $user -c 'sed -i "s/#os.system(home+\"/bin/screen-config.sh\")/os.system(home+\"/bin/screen-config.sh\")/" ~/.config/qtile/config.py'
     
