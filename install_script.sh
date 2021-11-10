@@ -127,28 +127,26 @@ then
 fi
 
 echo "Configurando vim"
-runuser -l $user -c 'mkdir tmp && cd tmp'
-runuser -l $user -c 'wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim tmp/vim-plug'
+runuser -l $user -c 'wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 runuser -l $user -c 'mkdir -p ~/.vim/autoload'
-runuser -l $user -c 'mv tmp/vim-plug/plug.vim ~/.vim/autoload/'
-runuser -l $user -c 'cd ~ && rm -R -f tmp'
+runuser -l $user -c 'mv plug.vim ~/.vim/autoload/'
 
 
 echo "Iniciando configuración de arranque"
-chown $user $SCRIPT_DIR/startup.sh
 runuser -l $user -c 'mkdir -p ~/bin'
-runuser -l $user -c 'cp ${SCRIPT_DIR}/startup.sh ~/bin'
+mv startup.sh /home/$user/bin/
+chown $user /home/$user/bin/startup.sh
 runuser -l $user -c 'chmod +x ~/bin/startup.sh'
 
 echo "Configurando rofi"
-chown $user $SCRIPT_DIR/config.rasi
 runuser -l $user -c 'mkdir -p ~/.config/rofi'
-runuser -l $user -c 'cp ${SCRIPT_DIR}/config.rasi ~/.config/rofi'
+mv config.rasi /home/$user/.config/rofi
+chown $user /home/$user/config.rasi
 
 if [ "${multimonitor,,}" = "si" ]
 then
     chown $user $SCRIPT_DIR/screen-config.sh
-    runuser -l $user -c "cp ${SCRIPT_DIR}/screen-config.sh ~/bin"
+    mv screen-config.sh /home/$user/bin/
     runuser -l $user -c 'chmod +x ~/bin/screen-config.sh'
     runuser -l $user -c 'sed -i "s/#os.system(home+\"/bin/screen-config.sh\")/os.system(home+\"/bin/screen-config.sh\")/" ~/.config/qtile/config.py'
     
