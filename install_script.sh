@@ -1,6 +1,6 @@
 #!/bin/bash
 #Instalación basada en qtile y xorg
-PACKAGES_TO_INSTALL=" xorg xserver-xorg libcairo2 python3-pip libgdk-pixbuf2.0-0 libpangocairo-1.0-0 vim htop screenfetch fonts-ubuntu fonts-powerline git openjdk-11-jdk flatpak nodejs npm chromium firefox-esr ffmpeg obs-studio tilix vlc gimp gmtp pulseaudio pavucontrol unrar zip fonts-font-awesome fonts-noto-mono desktop-base printer-driver-all flameshot vim-gtk compton rofi xfce4-notifyd samba transmission-gtk"
+PACKAGES_TO_INSTALL=" xorg xserver-xorg libcairo2 python3-pip libgdk-pixbuf2.0-0 libpangocairo-1.0-0 vim htop screenfetch fonts-ubuntu fonts-powerline git openjdk-11-jdk flatpak nodejs npm chromium firefox-esr ffmpeg obs-studio tilix vlc gimp gmtp pulseaudio pavucontrol unrar zip fonts-font-awesome fonts-noto-mono desktop-base printer-driver-all flameshot vim-gtk compton rofi xfce4-notifyd samba transmission-gtk ark sane-airscan sane"
 
 echo "¿Instalar iwlwifi (Controladores para tarjetas wifi intel/tp-link)? Si/No"
 read iwlwifi
